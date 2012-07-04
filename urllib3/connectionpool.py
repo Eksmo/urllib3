@@ -435,6 +435,8 @@ class HTTPConnectionPool(ConnectionPool, RequestMethods):
         if not conn:
             log.warn("Retrying (%d attempts remain) after connection "
                      "broken by '%r': %s" % (retries, err, url))
+            if hasattr(body, 'read') and not isinstance(data, array):
+                body.seek(0)
             return self.urlopen(method, url, body, headers, retries - 1,
                                 redirect, assert_same_host)  # Try again
 
